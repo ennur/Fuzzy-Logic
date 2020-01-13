@@ -1,0 +1,1060 @@
+FUNCTION_BLOCK BulanikOrnek
+
+VAR_INPUT
+
+    alkol:REAL;
+    flavanoitler:REAL;
+    magnezyum:REAL;
+    toplam_fenoller:REAL;
+    renk_yogunlugu:REAL;
+    od280_od315:REAL;
+    
+END_VAR
+
+VAR_OUTPUT
+   sarap_sinif:REAL;
+END_VAR
+
+FUZZIFY alkol 
+  TERM az := (12.5,0)(13.5,1)(14,0) ;
+  TERM orta := (11,0)(12.2,1)(13.5,0);
+  TERM fazla := (13,0)(15,1)(17,1) ;
+
+END_FUZZIFY
+
+FUZZIFY flavanoitler 
+
+  TERM az:= (0,0)(0.75,1)(1.5,0);
+  TERM orta:= (1,0)(2,1)(3,0);
+  TERM fazla := (2,0)(3.5,1)(4,1);
+
+END_FUZZIFY
+
+FUZZIFY magnezyum
+  TERM az:= (85,0)(104,1)(123,0);
+  TERM orta := (70,0)(85,1)(100,0);
+  TERM fazla := (90,0)(113,1)(135,0);
+
+END_FUZZIFY
+
+FUZZIFY toplam_fenoller
+  TERM az:= (0,0)(1,1)(2,0);
+  TERM orta := (1,0)(2,1)(3,0);
+  TERM fazla := (2,0)(3,1)(4,0);
+
+END_FUZZIFY
+
+FUZZIFY  renk_yogunlugu
+
+  TERM az:= (4,0)(7.5,1)(11,0);
+  TERM orta := (1.28,0)(3.64,1)(6,0);
+  TERM fazla := (3.5,0)(5.75,1)(8,0);
+
+END_FUZZIFY
+
+FUZZIFY  od280_od315
+
+  TERM az:= (1,0)(1.5,1)(2,0);
+  TERM orta := (1.5,0)(2.5,1)(3.5,0);
+  TERM fazla := (2,0)(3.5,1)(5,0);
+
+END_FUZZIFY
+
+DEFUZZIFY sarap_sinif
+   TERM birinci_sinif := (0,0)(1,1)(1.5,0);
+   TERM ikinci_sinif :=  (1,0)(2,1)(2.5,0);
+   TERM ucuncu_sinif :=  (2,0)(3,1);
+ 
+   METHOD :COG;
+   DEFAULT:= 2; 
+
+END_DEFUZZIFY
+
+//MAMDANI KURALLARI
+
+RULEBLOCK kuralblok
+    AND :MIN;
+    ACT : MIN;
+    ACCU :MAX;
+
+//AXB
+RULE 1: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS az THEN sarap_sinif IS ucuncu_sinif;  
+RULE 2: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 3: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ucuncu_sinif;  
+
+RULE 4: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 5: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 6: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ucuncu_sinif;  
+
+RULE 7: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS az   THEN sarap_sinif IS ucuncu_sinif;  
+RULE 8: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 9: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ucuncu_sinif;  
+//(AXB)XC
+RULE 10: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 11: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 12: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ucuncu_sinif;  
+ 
+RULE 13: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 14: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 15: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS az THEN sarap_sinif IS ucuncu_sinif;  
+
+RULE 16: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 17: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 18: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ucuncu_sinif;  
+
+RULE 19: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS az THEN sarap_sinif IS ucuncu_sinif;  
+RULE 20: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 21: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS az THEN sarap_sinif IS ucuncu_sinif;  
+
+RULE 22: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS az THEN sarap_sinif IS ucuncu_sinif;  
+RULE 23: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 24: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS az THEN sarap_sinif IS ucuncu_sinif;  
+
+RULE 25: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 26: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 27: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ucuncu_sinif;  
+// ((AXB)XC)XD
+RULE 28: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS az THEN sarap_sinif IS ucuncu_sinif;  
+RULE 29: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 30: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ucuncu_sinif;  
+
+RULE 31: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 32: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 33: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ucuncu_sinif;  
+
+RULE 34: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 35: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 36: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ucuncu_sinif;  
+
+RULE 37: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 38: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 39: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ucuncu_sinif;  
+
+RULE 40: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 41: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 42: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ucuncu_sinif;  
+
+RULE 43: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 44: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 45: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ucuncu_sinif;  
+
+RULE 46: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 47: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 48: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 49: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 50: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 51: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ucuncu_sinif;  
+
+RULE 52: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 53: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 54: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ucuncu_sinif;  
+
+RULE 55: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 56: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 57: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ucuncu_sinif;  
+
+RULE 58: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS az     THEN sarap_sinif IS ucuncu_sinif;  
+RULE 59: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS az   THEN sarap_sinif IS ucuncu_sinif;  
+RULE 60: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ucuncu_sinif;  
+
+RULE 61: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS az    THEN sarap_sinif IS ucuncu_sinif;  
+RULE 62: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS az   THEN sarap_sinif IS ucuncu_sinif;  
+RULE 63: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ucuncu_sinif;  
+
+RULE 64: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 65: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS az THEN sarap_sinif IS ucuncu_sinif;  
+RULE 66: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS az THEN sarap_sinif IS ucuncu_sinif;  
+
+RULE 67: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS az      THEN sarap_sinif IS ucuncu_sinif;  
+RULE 68: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS az    THEN sarap_sinif IS ucuncu_sinif;  
+RULE 69: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS az   THEN sarap_sinif IS ucuncu_sinif;  
+
+RULE 70: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS az     THEN sarap_sinif IS ucuncu_sinif;  
+RULE 71: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS az   THEN sarap_sinif IS ucuncu_sinif;  
+RULE 72: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ucuncu_sinif;  
+
+RULE 73: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS az       THEN sarap_sinif IS ucuncu_sinif;  
+RULE 74: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS az    THEN sarap_sinif IS ucuncu_sinif;  
+RULE 75: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS az    THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 76: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS az    THEN sarap_sinif IS ikinci_sinif;  
+RULE 77: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ikinci_sinif;  
+RULE 78: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS az THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 79: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ikinci_sinif;  
+RULE 80: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ikinci_sinif;  
+RULE 81: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS birinci_sinif;  
+
+// (AXB)XC)XD)XE
+RULE 82: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS az           THEN sarap_sinif IS ucuncu_sinif;  
+RULE 83: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS az        THEN sarap_sinif IS ucuncu_sinif;  
+RULE 84: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS az        THEN sarap_sinif IS ucuncu_sinif;  
+
+RULE 85: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS az         THEN sarap_sinif IS ucuncu_sinif;  
+RULE 86: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS az       THEN sarap_sinif IS ucuncu_sinif;  
+RULE 87: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS az     THEN sarap_sinif IS ucuncu_sinif;  
+
+RULE 88: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS az        THEN sarap_sinif IS ucuncu_sinif;  
+RULE 89: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS az      THEN sarap_sinif IS ucuncu_sinif;  
+RULE 90: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS az     THEN sarap_sinif IS ucuncu_sinif;  
+
+RULE 91: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS az         THEN sarap_sinif IS ucuncu_sinif;  
+RULE 92: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS az      THEN sarap_sinif IS ucuncu_sinif;  
+RULE 93: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS az      THEN sarap_sinif IS ucuncu_sinif;  //ikinci
+  
+RULE 94: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS az       THEN sarap_sinif IS ucuncu_sinif;  
+RULE 95: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS az     THEN sarap_sinif IS ikinci_sinif;  
+RULE 96: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS az    THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 97: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS az      THEN sarap_sinif IS ikinci_sinif;  
+RULE 98: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS az    THEN sarap_sinif IS ikinci_sinif;  
+RULE 99: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS az   THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 100: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS az        THEN sarap_sinif IS ucuncu_sinif;  
+RULE 101: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS az     THEN sarap_sinif IS ucuncu_sinif;  
+RULE 102: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS az     THEN sarap_sinif IS ucuncu_sinif;  
+
+RULE 103: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS az      THEN sarap_sinif IS ucuncu_sinif;  
+RULE 104: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS az    THEN sarap_sinif IS ikinci_sinif;  
+RULE 105: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS az   THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 106: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS az     THEN sarap_sinif IS ikinci_sinif;  
+RULE 107: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS az   THEN sarap_sinif IS ikinci_sinif;  
+RULE 108: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS az  THEN sarap_sinif IS birinci_sinif;  
+
+RULE 109: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS az         THEN sarap_sinif IS ucuncu_sinif;  
+RULE 110: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS az      THEN sarap_sinif IS ucuncu_sinif;  
+RULE 111: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS az      THEN sarap_sinif IS ucuncu_sinif;  
+
+RULE 112: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS az       THEN sarap_sinif IS ucuncu_sinif;  
+RULE 113: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS az     THEN sarap_sinif IS ikinci_sinif;  
+RULE 114: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS az    THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 115: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS az        THEN sarap_sinif IS ikinci_sinif;  
+RULE 116: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS az      THEN sarap_sinif IS ikinci_sinif;  
+RULE 117: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS az     THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 118: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS az         THEN sarap_sinif IS ucuncu_sinif;  
+RULE 119: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS az      THEN sarap_sinif IS ikinci_sinif;  
+RULE 120: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS az      THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 121: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS az       THEN sarap_sinif IS ikinci_sinif;  
+RULE 122: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS az     THEN sarap_sinif IS ikinci_sinif;  
+RULE 123: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS az    THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 124: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS az       THEN sarap_sinif IS ikinci_sinif;  
+RULE 125: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS az     THEN sarap_sinif IS ikinci_sinif;  
+RULE 126: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS az    THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 127: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS az         THEN sarap_sinif IS ikinci_sinif;  
+RULE 128: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS az      THEN sarap_sinif IS ikinci_sinif;  
+RULE 129: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS az      THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 130: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS az       THEN sarap_sinif IS ikinci_sinif;  
+RULE 131: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS az     THEN sarap_sinif IS ikinci_sinif;  
+RULE 132: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS az    THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 133: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS az      THEN sarap_sinif IS ikinci_sinif;  
+RULE 134: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS az    THEN sarap_sinif IS ikinci_sinif;  
+RULE 135: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS az   THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 136: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS az           THEN sarap_sinif IS ucuncu_sinif;  
+RULE 137: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS az        THEN sarap_sinif IS ucuncu_sinif;  
+RULE 138: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS az        THEN sarap_sinif IS ucuncu_sinif;  
+
+RULE 139: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS az         THEN sarap_sinif IS ucuncu_sinif;  
+RULE 140: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS az       THEN sarap_sinif IS ikinci_sinif;  
+RULE 141: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS az      THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 142: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS az        THEN sarap_sinif IS ikinci_sinif;  
+RULE 143: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS az      THEN sarap_sinif IS ikinci_sinif;  
+RULE 144: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS az     THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 145: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS az         THEN sarap_sinif IS ikinci_sinif;  
+RULE 146: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS az      THEN sarap_sinif IS ikinci_sinif;  
+RULE 147: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS az      THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 148: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS az       THEN sarap_sinif IS ikinci_sinif;  
+RULE 149: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS az     THEN sarap_sinif IS ikinci_sinif;  
+RULE 150: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS az    THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 151: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS az      THEN sarap_sinif IS ikinci_sinif;  
+RULE 152: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS az    THEN sarap_sinif IS ikinci_sinif;  
+RULE 153: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS az   THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 154: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS az        THEN sarap_sinif IS ikinci_sinif;  
+RULE 155: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS az     THEN sarap_sinif IS ikinci_sinif;  
+RULE 156: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS az     THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 157: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS az      THEN sarap_sinif IS ikinci_sinif;  
+RULE 158: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS az    THEN sarap_sinif IS ikinci_sinif;  
+RULE 159: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS az   THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 160: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS az     THEN sarap_sinif IS ikinci_sinif;  
+RULE 161: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS az   THEN sarap_sinif IS ikinci_sinif;  
+RULE 162: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS az  THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 163: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS az             THEN sarap_sinif IS ucuncu_sinif;  
+RULE 164: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS az          THEN sarap_sinif IS ucuncu_sinif;  
+RULE 165: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS az          THEN sarap_sinif IS ucuncu_sinif;  
+
+RULE 166: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS az           THEN sarap_sinif IS ucuncu_sinif;  
+RULE 167: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS az         THEN sarap_sinif IS ucuncu_sinif;  
+RULE 168: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS az        THEN sarap_sinif IS ucuncu_sinif;  
+
+RULE 169: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS az          THEN sarap_sinif IS ucuncu_sinif;  
+RULE 170: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS az        THEN sarap_sinif IS ucuncu_sinif;  
+RULE 171: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS az       THEN sarap_sinif IS ucuncu_sinif;  
+
+RULE 172: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS az           THEN sarap_sinif IS ucuncu_sinif;  
+RULE 173: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS az        THEN sarap_sinif IS ucuncu_sinif;  
+RULE 174: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS az        THEN sarap_sinif IS ucuncu_sinif;  
+ 
+RULE 175: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS az         THEN sarap_sinif IS ucuncu_sinif;  
+RULE 176: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS az       THEN sarap_sinif IS ikinci_sinif;  
+RULE 177: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS az      THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 178: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS az        THEN sarap_sinif IS ikinci_sinif;  
+RULE 179: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS az      THEN sarap_sinif IS ikinci_sinif;  
+RULE 180: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS az     THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 181: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS az          THEN sarap_sinif IS ucuncu_sinif;  
+RULE 182: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS az       THEN sarap_sinif IS ucuncu_sinif;  
+RULE 183: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS az       THEN sarap_sinif IS ucuncu_sinif;  
+
+RULE 184: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS az        THEN sarap_sinif IS ucuncu_sinif;  
+RULE 185: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS az      THEN sarap_sinif IS ikinci_sinif;  
+RULE 186: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS az     THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 187: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS az       THEN sarap_sinif IS ikinci_sinif;  
+RULE 188: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS az     THEN sarap_sinif IS ikinci_sinif;  
+RULE 189: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS az    THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 190: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS az           THEN sarap_sinif IS ucuncu_sinif;  
+RULE 191: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS az        THEN sarap_sinif IS ucuncu_sinif;  
+RULE 192: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS az        THEN sarap_sinif IS ucuncu_sinif;  
+
+RULE 193: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS az         THEN sarap_sinif IS ucuncu_sinif;  
+RULE 194: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS az       THEN sarap_sinif IS ikinci_sinif;  
+RULE 195: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS az      THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 196: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS az        THEN sarap_sinif IS ikinci_sinif;  
+RULE 197: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS az      THEN sarap_sinif IS ikinci_sinif;  
+RULE 198: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS az     THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 199: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS az         THEN sarap_sinif IS ucuncu_sinif;  
+RULE 200: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS az      THEN sarap_sinif IS ikinci_sinif;  
+RULE 201: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS az      THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 202: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS az       THEN sarap_sinif IS ikinci_sinif;  
+RULE 203: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS az     THEN sarap_sinif IS ikinci_sinif;  
+RULE 204: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS az    THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 205: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS az      THEN sarap_sinif IS ikinci_sinif;  
+RULE 206: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS az    THEN sarap_sinif IS ikinci_sinif;  
+RULE 207: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS az   THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 208: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS az         THEN sarap_sinif IS ucuncu_sinif;  
+RULE 209: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS az      THEN sarap_sinif IS ikinci_sinif;  
+RULE 210: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS az      THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 211: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS az       THEN sarap_sinif IS ikinci_sinif;  
+RULE 212: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS az     THEN sarap_sinif IS ikinci_sinif;  
+RULE 213: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS az    THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 214: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS az      THEN sarap_sinif IS ikinci_sinif;  
+RULE 215: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS az    THEN sarap_sinif IS ikinci_sinif;  
+RULE 216: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS az   THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 217: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS az           THEN sarap_sinif IS ucuncu_sinif;  
+RULE 218: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS az        THEN sarap_sinif IS ucuncu_sinif;  
+RULE 219: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS az        THEN sarap_sinif IS ucuncu_sinif;  
+
+RULE 220: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS az         THEN sarap_sinif IS ucuncu_sinif;  
+RULE 221: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS az       THEN sarap_sinif IS ikinci_sinif;  
+RULE 222: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS az      THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 223: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS az        THEN sarap_sinif IS ikinci_sinif;  
+RULE 224: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS az      THEN sarap_sinif IS ikinci_sinif;  
+RULE 225: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS az     THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 226: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS az         THEN sarap_sinif IS ucuncu_sinif;  
+RULE 227: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS az      THEN sarap_sinif IS ikinci_sinif;  
+RULE 228: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS az      THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 229: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS az       THEN sarap_sinif IS ikinci_sinif;  
+RULE 230: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS az     THEN sarap_sinif IS ikinci_sinif;  
+RULE 231: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS az    THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 232: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS az      THEN sarap_sinif IS ikinci_sinif;  
+RULE 233: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS az    THEN sarap_sinif IS ikinci_sinif;  
+RULE 234: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS az   THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 235: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS az        THEN sarap_sinif IS ucuncu_sinif;  
+RULE 236: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS az     THEN sarap_sinif IS ikinci_sinif;  
+RULE 237: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS az     THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 238: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS az      THEN sarap_sinif IS ikinci_sinif;  
+RULE 239: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS az    THEN sarap_sinif IS ikinci_sinif;  
+RULE 240: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS az   THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 241: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS az     THEN sarap_sinif IS ikinci_sinif;  
+RULE 242: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS az   THEN sarap_sinif IS ikinci_sinif;  
+RULE 243: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS az  THEN sarap_sinif IS ikinci_sinif;  
+
+
+RULE 244: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS orta THEN sarap_sinif IS ucuncu_sinif;  
+RULE 245: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS orta  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 246: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS orta  THEN sarap_sinif IS ucuncu_sinif;  
+
+RULE 247: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS orta  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 248: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS orta  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 249: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS orta  THEN sarap_sinif IS ucuncu_sinif;  
+
+RULE 250: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS orta THEN sarap_sinif IS ucuncu_sinif;  
+RULE 251: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS orta  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 252: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS orta  THEN sarap_sinif IS ucuncu_sinif;  
+
+RULE 253: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS orta  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 254: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS orta  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 255: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS orta  THEN sarap_sinif IS ucuncu_sinif;  
+ 
+RULE 256: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS orta  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 257: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS orta  THEN sarap_sinif IS ikinci_sinif;  
+RULE 258: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS orta THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 259: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS orta  THEN sarap_sinif IS ikinci_sinif;  
+RULE 260: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS orta  THEN sarap_sinif IS ikinci_sinif;  
+RULE 261: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS orta  THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 262: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS orta THEN sarap_sinif IS ucuncu_sinif;  
+RULE 263: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS orta  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 264: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS orta THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 265: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS orta THEN sarap_sinif IS ucuncu_sinif;  
+RULE 266: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS orta  THEN sarap_sinif IS ikinci_sinif;  
+RULE 267: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS orta THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 268: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS orta  THEN sarap_sinif IS ikinci_sinif;  
+RULE 269: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS orta  THEN sarap_sinif IS ikinci_sinif;  
+RULE 270: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS orta  THEN sarap_sinif IS ikinci_sinif;
+
+RULE 271: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS orta THEN sarap_sinif IS ucuncu_sinif;  
+RULE 272: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS orta  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 273: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS orta  THEN sarap_sinif IS ucuncu_sinif;  
+
+RULE 274: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS orta  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 275: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS orta  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 276: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS orta  THEN sarap_sinif IS ucuncu_sinif;  
+
+RULE 277: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS orta  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 278: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS orta  THEN sarap_sinif IS ikinci_sinif;  
+RULE 279: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS orta  THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 280: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS az  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 281: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS orta  THEN sarap_sinif IS ikinci_sinif;  
+RULE 282: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS orta  THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 283: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS orta  THEN sarap_sinif IS ikinci_sinif;  
+RULE 284: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS orta  THEN sarap_sinif IS ikinci_sinif;  
+RULE 285: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS orta  THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 286: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS orta  THEN sarap_sinif IS ikinci_sinif;  
+RULE 287: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS orta  THEN sarap_sinif IS ikinci_sinif;  
+RULE 288: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS orta  THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 289: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS orta  THEN sarap_sinif IS ikinci_sinif;  
+RULE 290: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS orta  THEN sarap_sinif IS ikinci_sinif;  
+RULE 291: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS orta  THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 292: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS orta  THEN sarap_sinif IS ikinci_sinif;  
+RULE 293: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS orta  THEN sarap_sinif IS ikinci_sinif;  
+RULE 294: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS orta  THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 295: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS orta  THEN sarap_sinif IS ikinci_sinif;  
+RULE 296: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS orta  THEN sarap_sinif IS ikinci_sinif;  
+RULE 297: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS orta  THEN sarap_sinif IS birinci_sinif;  
+
+RULE 298: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS orta  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 299: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS orta  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 300: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS orta  THEN sarap_sinif IS ucuncu_sinif;  
+
+RULE 301: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS orta     THEN sarap_sinif IS ucuncu_sinif;  
+RULE 302: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS orta   THEN sarap_sinif IS ikinci_sinif;  
+RULE 303: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS orta THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 304: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS orta    THEN sarap_sinif IS ikinci_sinif;  
+RULE 305: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS orta   THEN sarap_sinif IS ikinci_sinif;  
+RULE 306: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS orta  THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 307: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS orta  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 308: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS orta THEN sarap_sinif IS ikinci_sinif;  
+RULE 309: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS orta THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 310: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS orta      THEN sarap_sinif IS ikinci_sinif;  
+RULE 311: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS orta    THEN sarap_sinif IS ikinci_sinif;  
+RULE 312: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS orta   THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 313: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS orta     THEN sarap_sinif IS ikinci_sinif;  
+RULE 314: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS orta   THEN sarap_sinif IS ikinci_sinif;  
+RULE 315: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS orta  THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 316: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS orta  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 317: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS orta    THEN sarap_sinif IS ikinci_sinif;  
+RULE 318: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS orta    THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 319: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS orta    THEN sarap_sinif IS ikinci_sinif;  
+RULE 320: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS orta  THEN sarap_sinif IS ikinci_sinif;  
+RULE 321: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS orta THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 322: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS orta  THEN sarap_sinif IS birinci_sinif;  
+RULE 323: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS orta  THEN sarap_sinif IS birinci_sinif;  
+RULE 324: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS orta  THEN sarap_sinif IS birinci_sinif;  
+
+RULE 325: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS orta     THEN sarap_sinif IS ucuncu_sinif;  
+RULE 326: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS orta  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 327: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS orta  THEN sarap_sinif IS ucuncu_sinif;  
+
+RULE 328: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS orta         THEN sarap_sinif IS ucuncu_sinif;  
+RULE 329: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS orta       THEN sarap_sinif IS ikinci_sinif;  
+RULE 330: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS orta     THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 331: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS orta        THEN sarap_sinif IS ikinci_sinif;  
+RULE 332: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS orta      THEN sarap_sinif IS ikinci_sinif;  
+RULE 333: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS orta     THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 334: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS orta         THEN sarap_sinif IS ucuncu_sinif;  
+RULE 335: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS orta      THEN sarap_sinif IS ikinci_sinif;  
+RULE 336: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS orta      THEN sarap_sinif IS ikinci_sinif;  
+  
+RULE 337: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS orta       THEN sarap_sinif IS ikinci_sinif;  
+RULE 338: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS orta     THEN sarap_sinif IS ikinci_sinif;  
+RULE 339: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS orta    THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 340: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS orta      THEN sarap_sinif IS ikinci_sinif;  
+RULE 341: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS orta    THEN sarap_sinif IS ikinci_sinif;  
+RULE 342: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS orta   THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 343: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS orta        THEN sarap_sinif IS ucuncu_sinif;  
+RULE 344: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS orta     THEN sarap_sinif IS ikinci_sinif;  
+RULE 345: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS orta     THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 346: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS orta      THEN sarap_sinif IS ikinci_sinif;  
+RULE 347: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS orta    THEN sarap_sinif IS ikinci_sinif;  
+RULE 348: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS orta   THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 349: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS orta     THEN sarap_sinif IS ikinci_sinif;  
+RULE 350: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS orta   THEN sarap_sinif IS ikinci_sinif;  
+RULE 351: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS orta  THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 352: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS orta         THEN sarap_sinif IS ucuncu_sinif;  
+RULE 353: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS orta      THEN sarap_sinif IS ikinci_sinif;  
+RULE 354: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS orta      THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 355: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS orta       THEN sarap_sinif IS ikinci_sinif;  
+RULE 356: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS orta     THEN sarap_sinif IS ikinci_sinif;  
+RULE 357: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS orta    THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 358: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS orta        THEN sarap_sinif IS ikinci_sinif;  
+RULE 359: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS orta      THEN sarap_sinif IS ikinci_sinif;  
+RULE 360: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS orta     THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 361: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS orta         THEN sarap_sinif IS ikinci_sinif;  
+RULE 362: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS orta      THEN sarap_sinif IS ikinci_sinif;  
+RULE 363: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS orta      THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 364: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS orta       THEN sarap_sinif IS ikinci_sinif;  
+RULE 365: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS orta     THEN sarap_sinif IS ikinci_sinif;  
+RULE 366: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS orta    THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 367: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS orta       THEN sarap_sinif IS ucuncu_sinif;  
+RULE 368: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS orta     THEN sarap_sinif IS birinci_sinif;  
+RULE 369: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS orta    THEN sarap_sinif IS birinci_sinif;  
+
+RULE 370: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS orta         THEN sarap_sinif IS ikinci_sinif;  
+RULE 371: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS orta      THEN sarap_sinif IS ikinci_sinif;  
+RULE 372: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS orta      THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 373: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS orta       THEN sarap_sinif IS ikinci_sinif;  
+RULE 374: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS orta     THEN sarap_sinif IS ikinci_sinif;  
+RULE 375: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS orta    THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 376: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS orta      THEN sarap_sinif IS ikinci_sinif;  
+RULE 377: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS orta    THEN sarap_sinif IS ikinci_sinif;  
+RULE 378: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS orta   THEN sarap_sinif IS birinci_sinif;  
+
+RULE 379: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS orta           THEN sarap_sinif IS ucuncu_sinif;  
+RULE 380: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS orta        THEN sarap_sinif IS ikinci_sinif;  
+RULE 381: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS orta        THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 382: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS orta         THEN sarap_sinif IS ikinci_sinif;  
+RULE 383: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS orta       THEN sarap_sinif IS birinci_sinif;  
+RULE 384: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS orta      THEN sarap_sinif IS birinci_sinif;  
+
+RULE 385: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS orta        THEN sarap_sinif IS birinci_sinif;  
+RULE 386: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS orta      THEN sarap_sinif IS birinci_sinif;  
+RULE 387: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS orta     THEN sarap_sinif IS birinci_sinif;  
+
+RULE 388: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS orta         THEN sarap_sinif IS ikinci_sinif;  
+RULE 389: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS orta      THEN sarap_sinif IS ikinci_sinif;  
+RULE 390: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS orta      THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 391: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS orta       THEN sarap_sinif IS ikinci_sinif;  
+RULE 392: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS orta     THEN sarap_sinif IS ikinci_sinif;  
+RULE 393: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS orta    THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 394: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS orta      THEN sarap_sinif IS ikinci_sinif;  
+RULE 395: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS orta    THEN sarap_sinif IS birinci_sinif;  
+RULE 396: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS orta   THEN sarap_sinif IS birinci_sinif;  
+
+RULE 397: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS orta        THEN sarap_sinif IS ikinci_sinif;  
+RULE 398: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS orta     THEN sarap_sinif IS ikinci_sinif;  
+RULE 399: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS orta     THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 400: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS orta      THEN sarap_sinif IS ikinci_sinif;  
+RULE 401: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS orta    THEN sarap_sinif IS ikinci_sinif;  
+RULE 402: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS orta   THEN sarap_sinif IS birinci_sinif;  
+
+RULE 403: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS orta     THEN sarap_sinif IS ikinci_sinif;  
+RULE 404: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS orta   THEN sarap_sinif IS birinci_sinif;  
+RULE 405: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS orta  THEN sarap_sinif IS birinci_sinif;  
+
+RULE 406: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS orta             THEN sarap_sinif IS ucuncu_sinif;  
+RULE 407: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS orta          THEN sarap_sinif IS ucuncu_sinif;  
+RULE 408: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS orta          THEN sarap_sinif IS ucuncu_sinif;  
+
+RULE 409: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS orta           THEN sarap_sinif IS ucuncu_sinif;  
+RULE 410: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS orta         THEN sarap_sinif IS ikinci_sinif;  
+RULE 411: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS orta        THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 412: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS orta          THEN sarap_sinif IS ikinci_sinif;  
+RULE 413: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS orta        THEN sarap_sinif IS ikinci_sinif;  
+RULE 414: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS orta       THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 415: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS orta           THEN sarap_sinif IS ucuncu_sinif;  
+RULE 416: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS orta        THEN sarap_sinif IS ikinci_sinif;  
+RULE 417: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS orta        THEN sarap_sinif IS ikinci_sinif;  
+ 
+RULE 418: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS orta         THEN sarap_sinif IS ikinci_sinif;  
+RULE 419: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS orta       THEN sarap_sinif IS ikinci_sinif;  
+RULE 420: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS orta      THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 421: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS orta        THEN sarap_sinif IS ikinci_sinif;  
+RULE 422: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS orta      THEN sarap_sinif IS ikinci_sinif;  
+RULE 423: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS orta     THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 424 : IF alkol IS az AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS orta         THEN sarap_sinif IS ikinci_sinif;  
+RULE 425: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS orta       THEN sarap_sinif IS ikinci_sinif;  
+RULE 426: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS orta       THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 427: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS orta        THEN sarap_sinif IS ikinci_sinif;  
+RULE 428: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS orta      THEN sarap_sinif IS ikinci_sinif;  
+RULE 429: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS orta     THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 430: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS orta       THEN sarap_sinif IS ikinci_sinif;  
+RULE 431: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS orta     THEN sarap_sinif IS ikinci_sinif;  
+RULE 432: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS orta    THEN sarap_sinif IS birinci_sinif;  
+
+RULE 433: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS orta           THEN sarap_sinif IS ucuncu_sinif;  
+RULE 434: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS orta        THEN sarap_sinif IS ikinci_sinif;  
+RULE 435: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS orta        THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 436: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS orta         THEN sarap_sinif IS ikinci_sinif;  
+RULE 437: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS orta       THEN sarap_sinif IS ikinci_sinif;  
+RULE 438: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS orta      THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 439: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS orta        THEN sarap_sinif IS ikinci_sinif;  
+RULE 440: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS orta      THEN sarap_sinif IS birinci_sinif;  
+RULE 441: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS orta     THEN sarap_sinif IS birinci_sinif;  
+
+RULE 442: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS orta         THEN sarap_sinif IS ikinci_sinif;  
+RULE 443: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS orta      THEN sarap_sinif IS ikinci_sinif;  
+RULE 444: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS orta      THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 445: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS orta       THEN sarap_sinif IS ikinci_sinif;  
+RULE 446: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS orta     THEN sarap_sinif IS ikinci_sinif;  
+RULE 447: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS orta    THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 448: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS orta      THEN sarap_sinif IS ikinci_sinif;  
+RULE 449: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS orta    THEN sarap_sinif IS birinci_sinif;  
+RULE 450: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS orta   THEN sarap_sinif IS birinci_sinif;  
+
+RULE 451: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS orta         THEN sarap_sinif IS ikinci_sinif;  
+RULE 452: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS orta      THEN sarap_sinif IS ikinci_sinif;  
+RULE 453: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS orta      THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 454: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS orta       THEN sarap_sinif IS ikinci_sinif;  
+RULE 455: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS orta     THEN sarap_sinif IS ikinci_sinif;  
+RULE 456: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS orta    THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 457: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS orta      THEN sarap_sinif IS ikinci_sinif;  
+RULE 458: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS orta    THEN sarap_sinif IS birinci_sinif;  
+RULE 459: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS orta   THEN sarap_sinif IS birinci_sinif;  
+
+RULE 460: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS orta           THEN sarap_sinif IS ucuncu_sinif;  
+RULE 461: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS orta        THEN sarap_sinif IS ikinci_sinif;  
+RULE 462: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS orta        THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 463: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS orta         THEN sarap_sinif IS ikinci_sinif;  
+RULE 464: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS orta       THEN sarap_sinif IS ikinci_sinif;  
+RULE 465: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS orta      THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 466: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS orta        THEN sarap_sinif IS ikinci_sinif;  
+RULE 467: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS orta      THEN sarap_sinif IS birinci_sinif;  
+RULE 468: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS orta     THEN sarap_sinif IS birinci_sinif;  
+
+RULE 469: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS orta         THEN sarap_sinif IS ikinci_sinif;  
+RULE 470: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS orta      THEN sarap_sinif IS ikinci_sinif;  
+RULE 471: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS orta      THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 472: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS orta       THEN sarap_sinif IS ikinci_sinif;  
+RULE 473: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS orta     THEN sarap_sinif IS ikinci_sinif;  
+RULE 474: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS orta    THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 475: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS orta      THEN sarap_sinif IS ikinci_sinif;  
+RULE 476: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS orta    THEN sarap_sinif IS birinci_sinif;  
+RULE 477: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS orta   THEN sarap_sinif IS birinci_sinif;  
+
+RULE 478: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS orta        THEN sarap_sinif IS ikinci_sinif;  
+RULE 479: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS orta     THEN sarap_sinif IS ikinci_sinif;  
+RULE 480: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS orta     THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 481: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS orta      THEN sarap_sinif IS ikinci_sinif;  
+RULE 482: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS orta    THEN sarap_sinif IS ikinci_sinif;  
+RULE 483: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS orta   THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 484: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS orta     THEN sarap_sinif IS ikinci_sinif;  
+RULE 485: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS orta   THEN sarap_sinif IS birinci_sinif;  
+RULE 486: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS orta  THEN sarap_sinif IS birinci_sinif;
+
+//odt fazla
+RULE 487: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS fazla THEN sarap_sinif IS ucuncu_sinif;  
+RULE 488: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS fazla  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 489: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS fazla  THEN sarap_sinif IS ucuncu_sinif;  
+
+RULE 490: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS fazla  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 491: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS fazla  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 492: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS fazla  THEN sarap_sinif IS ucuncu_sinif;  
+
+RULE 493: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS fazla   THEN sarap_sinif IS ucuncu_sinif;  
+RULE 494: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS fazla  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 495: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS fazla  THEN sarap_sinif IS ucuncu_sinif;
+
+RULE 496: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS fazla  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 497: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS fazla THEN sarap_sinif IS ucuncu_sinif;  
+RULE 498: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS fazla  THEN sarap_sinif IS ucuncu_sinif;  
+ 
+RULE 499: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS fazla  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 500: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS fazla  THEN sarap_sinif IS ikinci_sinif;  
+RULE 501: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS fazla THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 502: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS fazla  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 503: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS fazla  THEN sarap_sinif IS ikinci_sinif;  
+RULE 504: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS fazla  THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 505: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS fazla THEN sarap_sinif IS ucuncu_sinif;  
+RULE 506: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS fazla  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 507: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS fazla THEN sarap_sinif IS ucuncu_sinif;  
+
+RULE 508: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS fazla THEN sarap_sinif IS ucuncu_sinif;  
+RULE 509: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS fazla  THEN sarap_sinif IS ikinci_sinif;  
+RULE 510: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS fazla THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 511: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS fazla  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 512: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS fazla  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 513: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS az AND od280_od315 IS fazla  THEN sarap_sinif IS ikinci_sinif; 
+
+RULE 514: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS fazla THEN sarap_sinif IS ucuncu_sinif;  
+RULE 515: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS fazla  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 516: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS fazla  THEN sarap_sinif IS ucuncu_sinif;  
+
+RULE 517: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS fazla  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 518: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS fazla  THEN sarap_sinif IS ikinci_sinif;  
+RULE 519: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS fazla  THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 520: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS fazla  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 521: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS fazla  THEN sarap_sinif IS ikinci_sinif;  
+RULE 522: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS fazla  THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 523: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS fazla  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 524: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS fazla  THEN sarap_sinif IS ikinci_sinif;  
+RULE 525: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS fazla  THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 526: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS fazla  THEN sarap_sinif IS ikinci_sinif;  
+RULE 527: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS fazla  THEN sarap_sinif IS ikinci_sinif;  
+RULE 528: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS fazla  THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 529: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS fazla  THEN sarap_sinif IS ikinci_sinif;  
+RULE 530: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS fazla  THEN sarap_sinif IS ikinci_sinif;  
+RULE 531: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS fazla  THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 532: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS fazla  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 533: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS fazla  THEN sarap_sinif IS ikinci_sinif;  
+RULE 534: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS fazla  THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 535: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS fazla  THEN sarap_sinif IS ikinci_sinif;  
+RULE 536: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS fazla  THEN sarap_sinif IS ikinci_sinif;  
+RULE 537: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS fazla  THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 538: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS fazla  THEN sarap_sinif IS ikinci_sinif;  
+RULE 539: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS fazla  THEN sarap_sinif IS birinci_sinif;  
+RULE 540: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS az AND od280_od315 IS fazla  THEN sarap_sinif IS birinci_sinif;  
+
+RULE 541: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS fazla  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 542: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS fazla  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 543: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS fazla  THEN sarap_sinif IS ucuncu_sinif;  
+
+RULE 544: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS fazla     THEN sarap_sinif IS ikinci_sinif;  
+RULE 545: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS fazla   THEN sarap_sinif IS ikinci_sinif;  
+RULE 546: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS fazla  THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 547: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS fazla    THEN sarap_sinif IS ikinci_sinif;  
+RULE 548: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS fazla   THEN sarap_sinif IS ikinci_sinif;  
+RULE 549: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS fazla  THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 550: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS fazla  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 551: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS fazla THEN sarap_sinif IS ikinci_sinif;  
+RULE 552: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS fazla THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 553: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS fazla      THEN sarap_sinif IS ikinci_sinif;  
+RULE 554: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS fazla    THEN sarap_sinif IS ikinci_sinif;  
+RULE 555: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS fazla   THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 556: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS fazla     THEN sarap_sinif IS ikinci_sinif;  
+RULE 557: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS fazla   THEN sarap_sinif IS birinci_sinif;  
+RULE 558: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS fazla  THEN sarap_sinif IS birinci_sinif;  
+
+RULE 559: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS fazla       THEN sarap_sinif IS ucuncu_sinif;  
+RULE 560: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS fazla    THEN sarap_sinif IS ikinci_sinif;  
+RULE 561: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS fazla    THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 562: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS fazla    THEN sarap_sinif IS ikinci_sinif;  
+RULE 563: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS fazla  THEN sarap_sinif IS ikinci_sinif;  
+RULE 564: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS fazla THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 565: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS fazla  THEN sarap_sinif IS ikinci_sinif;  
+RULE 566: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS fazla  THEN sarap_sinif IS birinci_sinif;  
+RULE 567: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS az AND od280_od315 IS fazla  THEN sarap_sinif IS birinci_sinif;
+
+RULE 568: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS fazla    THEN sarap_sinif IS ucuncu_sinif;  
+RULE 569: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS fazla  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 570: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS fazla    THEN sarap_sinif IS ucuncu_sinif;  
+
+RULE 571: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS fazla  THEN sarap_sinif IS ucuncu_sinif;  
+RULE 572: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS fazla       THEN sarap_sinif IS ikinci_sinif;  
+RULE 573: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS fazla     THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 574: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS fazla        THEN sarap_sinif IS ucuncu_sinif;  
+RULE 575: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS fazla      THEN sarap_sinif IS ikinci_sinif;  
+RULE 576: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS fazla     THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 577: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS fazla         THEN sarap_sinif IS ucuncu_sinif;  
+RULE 578: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS fazla      THEN sarap_sinif IS ikinci_sinif;  
+RULE 579: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS fazla      THEN sarap_sinif IS ikinci_sinif;  
+  
+RULE 580: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS fazla       THEN sarap_sinif IS ikinci_sinif;  
+RULE 581: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS fazla     THEN sarap_sinif IS ikinci_sinif;  
+RULE 582: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS fazla    THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 583: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS fazla      THEN sarap_sinif IS ikinci_sinif;  
+RULE 584: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS fazla    THEN sarap_sinif IS ikinci_sinif;  
+RULE 585: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS fazla   THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 586: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS fazla        THEN sarap_sinif IS ucuncu_sinif;  
+RULE 587: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS fazla     THEN sarap_sinif IS ikinci_sinif;  
+RULE 588: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS fazla     THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 589: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS fazla      THEN sarap_sinif IS ikinci_sinif;  
+RULE 590: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS fazla    THEN sarap_sinif IS ikinci_sinif;  
+RULE 591: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS fazla   THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 592: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS fazla     THEN sarap_sinif IS ikinci_sinif;  
+RULE 593: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS fazla   THEN sarap_sinif IS ikinci_sinif;  
+RULE 594: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS orta AND od280_od315 IS fazla  THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 595: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS fazla         THEN sarap_sinif IS ucuncu_sinif;  
+RULE 596: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS fazla      THEN sarap_sinif IS ikinci_sinif;  
+RULE 597: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS fazla      THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 598: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS fazla       THEN sarap_sinif IS ikinci_sinif;  
+RULE 599: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS fazla     THEN sarap_sinif IS ikinci_sinif;  
+RULE 600: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS fazla    THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 601: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS fazla        THEN sarap_sinif IS ikinci_sinif;  
+RULE 602: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS fazla      THEN sarap_sinif IS ikinci_sinif;  
+RULE 603: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS fazla     THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 604: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS fazla         THEN sarap_sinif IS ikinci_sinif;  
+RULE 605: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS fazla      THEN sarap_sinif IS ikinci_sinif;  
+RULE 606: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS fazla      THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 607: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS fazla       THEN sarap_sinif IS ikinci_sinif;  
+RULE 608: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS fazla     THEN sarap_sinif IS ikinci_sinif;  
+RULE 609: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS fazla    THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 610: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS fazla       THEN sarap_sinif IS ikinci_sinif;  
+RULE 611: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS fazla     THEN sarap_sinif IS birinci_sinif;  
+RULE 612: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS fazla    THEN sarap_sinif IS birinci_sinif;  
+
+RULE 613: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS fazla         THEN sarap_sinif IS ikinci_sinif;  
+RULE 614: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS fazla      THEN sarap_sinif IS ikinci_sinif;  
+RULE 615: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS fazla      THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 616: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS fazla       THEN sarap_sinif IS ikinci_sinif;  
+RULE 617: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS fazla     THEN sarap_sinif IS ikinci_sinif;  
+RULE 618: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS fazla    THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 619: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS fazla      THEN sarap_sinif IS ikinci_sinif;  
+RULE 620: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS fazla    THEN sarap_sinif IS birinci_sinif;  
+RULE 621: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS orta AND od280_od315 IS fazla   THEN sarap_sinif IS birinci_sinif;  
+
+RULE 622: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS fazla           THEN sarap_sinif IS ucuncu_sinif;  
+RULE 623: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS fazla        THEN sarap_sinif IS ikinci_sinif;  
+RULE 624: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS fazla        THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 625: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS fazla         THEN sarap_sinif IS ikinci_sinif;  
+RULE 626: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS fazla       THEN sarap_sinif IS ikinci_sinif;  
+RULE 627: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS fazla      THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 628: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS fazla        THEN sarap_sinif IS ikinci_sinif;  
+RULE 629: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS fazla      THEN sarap_sinif IS ikinci_sinif;  
+RULE 630: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS fazla     THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 631: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS fazla         THEN sarap_sinif IS ikinci_sinif;  
+RULE 632: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS fazla      THEN sarap_sinif IS ikinci_sinif;  
+RULE 633: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS fazla      THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 634: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS fazla       THEN sarap_sinif IS ikinci_sinif;  
+RULE 635: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS fazla     THEN sarap_sinif IS ikinci_sinif;  
+RULE 636: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS fazla    THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 637: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS fazla      THEN sarap_sinif IS ikinci_sinif;  
+RULE 638: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS fazla    THEN sarap_sinif IS birinci_sinif;  
+RULE 639: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS fazla   THEN sarap_sinif IS birinci_sinif;  
+
+RULE 640: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS fazla        THEN sarap_sinif IS ikinci_sinif;  
+RULE 641: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS fazla     THEN sarap_sinif IS ikinci_sinif;  
+RULE 642: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS fazla     THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 643: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS fazla      THEN sarap_sinif IS ikinci_sinif;  
+RULE 644: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS fazla    THEN sarap_sinif IS birinci_sinif;  
+RULE 645: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS fazla   THEN sarap_sinif IS birinci_sinif;  
+
+RULE 646: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS fazla     THEN sarap_sinif IS ikinci_sinif;  
+RULE 647: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS fazla   THEN sarap_sinif IS birinci_sinif;  
+RULE 648: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS orta AND od280_od315 IS fazla  THEN sarap_sinif IS birinci_sinif;  
+
+RULE 649: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS fazla             THEN sarap_sinif IS ucuncu_sinif;  
+RULE 650: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS fazla          THEN sarap_sinif IS ucuncu_sinif;  
+RULE 651: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS fazla          THEN sarap_sinif IS ucuncu_sinif;  
+
+RULE 652: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS fazla           THEN sarap_sinif IS ucuncu_sinif;  
+RULE 653: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS fazla         THEN sarap_sinif IS ikinci_sinif;  
+RULE 654: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS fazla        THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 655: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS fazla          THEN sarap_sinif IS ucuncu_sinif;  
+RULE 656: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS fazla        THEN sarap_sinif IS ikinci_sinif;  
+RULE 657: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS fazla       THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 658: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS fazla           THEN sarap_sinif IS ucuncu_sinif;  
+RULE 659: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS fazla        THEN sarap_sinif IS ikinci_sinif;  
+RULE 660: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS fazla        THEN sarap_sinif IS ikinci_sinif;  
+ 
+RULE 661: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS fazla         THEN sarap_sinif IS ikinci_sinif;  
+RULE 662: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS fazla       THEN sarap_sinif IS ikinci_sinif;  
+RULE 663: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS fazla      THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 664: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS fazla        THEN sarap_sinif IS ikinci_sinif;  
+RULE 665: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS fazla      THEN sarap_sinif IS ikinci_sinif;  
+RULE 666: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS fazla     THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 667: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS fazla          THEN sarap_sinif IS ucuncu_sinif;  
+RULE 668: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS fazla       THEN sarap_sinif IS ikinci_sinif;  
+RULE 669: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS fazla       THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 670: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS fazla        THEN sarap_sinif IS ikinci_sinif;  
+RULE 671: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS fazla      THEN sarap_sinif IS ikinci_sinif;  
+RULE 672: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS fazla     THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 673: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS fazla       THEN sarap_sinif IS ikinci_sinif;  
+RULE 674: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS fazla     THEN sarap_sinif IS ikinci_sinif;  
+RULE 675: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS az AND renk_yogunlugu IS fazla AND od280_od315 IS fazla    THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 676: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS fazla           THEN sarap_sinif IS ucuncu_sinif;  
+RULE 677: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS fazla        THEN sarap_sinif IS ikinci_sinif;  
+RULE 678: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS fazla        THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 679: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS fazla         THEN sarap_sinif IS ikinci_sinif;  
+RULE 680: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS fazla       THEN sarap_sinif IS ikinci_sinif;  
+RULE 681: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS fazla      THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 682: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS fazla        THEN sarap_sinif IS ikinci_sinif;  
+RULE 683: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS fazla      THEN sarap_sinif IS birinci_sinif;  
+RULE 684: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS fazla     THEN sarap_sinif IS birinci_sinif;  
+
+RULE 685: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS fazla         THEN sarap_sinif IS ikinci_sinif;  
+RULE 686: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS fazla      THEN sarap_sinif IS ikinci_sinif;  
+RULE 687: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS fazla      THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 688: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS fazla       THEN sarap_sinif IS ikinci_sinif;  
+RULE 689: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS fazla     THEN sarap_sinif IS ikinci_sinif;  
+RULE 690: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS fazla    THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 691: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS fazla      THEN sarap_sinif IS ikinci_sinif;  
+RULE 692: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS fazla    THEN sarap_sinif IS birinci_sinif;  
+RULE 693: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS fazla   THEN sarap_sinif IS birinci_sinif;  
+
+RULE 694: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS fazla         THEN sarap_sinif IS ikinci_sinif;  
+RULE 695: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS fazla      THEN sarap_sinif IS ikinci_sinif;  
+RULE 696: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS fazla      THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 697: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS fazla       THEN sarap_sinif IS ikinci_sinif;  
+RULE 698: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS fazla     THEN sarap_sinif IS ikinci_sinif;  
+RULE 699: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS fazla    THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 700: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS fazla      THEN sarap_sinif IS ikinci_sinif;  
+RULE 701: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS fazla    THEN sarap_sinif IS birinci_sinif;  
+RULE 702: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS orta AND renk_yogunlugu IS fazla AND od280_od315 IS fazla   THEN sarap_sinif IS birinci_sinif;  
+
+RULE 703: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS fazla           THEN sarap_sinif IS ucuncu_sinif;  
+RULE 704: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS fazla        THEN sarap_sinif IS ikinci_sinif;  
+RULE 705: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS fazla        THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 706: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS fazla         THEN sarap_sinif IS ikinci_sinif;  
+RULE 707: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS fazla       THEN sarap_sinif IS ikinci_sinif;  
+RULE 708: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS fazla      THEN sarap_sinif IS ikinci_sinif;  
+
+RULE 709: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS fazla        THEN sarap_sinif IS ikinci_sinif;  
+RULE 710: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS fazla      THEN sarap_sinif IS birinci_sinif;  
+RULE 711: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS az AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS fazla     THEN sarap_sinif IS birinci_sinif;  
+
+RULE 712: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS fazla         THEN sarap_sinif IS birinci_sinif;  
+RULE 713: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS fazla      THEN sarap_sinif IS birinci_sinif;  
+RULE 714: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS fazla      THEN sarap_sinif IS birinci_sinif;  
+
+RULE 715: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS fazla       THEN sarap_sinif IS birinci_sinif;  
+RULE 716: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS fazla     THEN sarap_sinif IS birinci_sinif;  
+RULE 717: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS fazla    THEN sarap_sinif IS birinci_sinif;  
+
+RULE 718: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS fazla      THEN sarap_sinif IS birinci_sinif;  
+RULE 719: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS fazla    THEN sarap_sinif IS birinci_sinif;  
+RULE 720: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS orta AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS fazla   THEN sarap_sinif IS birinci_sinif;  
+
+RULE 721: IF alkol IS az AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS fazla        THEN sarap_sinif IS birinci_sinif;  
+RULE 722: IF alkol IS az AND flavanoitler IS orta  AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS fazla     THEN sarap_sinif IS birinci_sinif;  
+RULE 723: IF alkol IS az AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS fazla     THEN sarap_sinif IS birinci_sinif;  
+
+RULE 724: IF alkol IS orta AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS fazla      THEN sarap_sinif IS birinci_sinif;  
+RULE 725: IF alkol IS orta AND flavanoitler IS orta AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS fazla    THEN sarap_sinif IS birinci_sinif;  
+RULE 726: IF alkol IS orta AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS fazla   THEN sarap_sinif IS birinci_sinif;  
+
+RULE 727: IF alkol IS fazla AND flavanoitler IS az AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS fazla     THEN sarap_sinif IS birinci_sinif;  
+RULE 728: IF alkol IS fazla AND flavanoitler IS orta AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS fazla   THEN sarap_sinif IS birinci_sinif;  
+RULE 729: IF alkol IS fazla AND flavanoitler IS fazla AND magnezyum  IS fazla AND toplam_fenoller IS fazla AND renk_yogunlugu IS fazla AND od280_od315 IS fazla  THEN sarap_sinif IS birinci_sinif;  
+
+
+END_RULEBLOCK
+
+
+END_FUNCTION_BLOCK
