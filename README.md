@@ -1,6 +1,5 @@
 # Fuzzy-Logic
 
-* BulanıkModel.fcl dosyasında, wine.txt de bulunan veriler baz alınarak bulanık kümeler, dilsel değişkenler, üyelik fonksiyonları ve
-  bulanık kurallar tanımlanmıştır.
-* Wine.java dosyasında wine.txt deki veriler alınıp bulanıklaştırılma işlemi yapılıyor.
-* BulanıkOrnek.java dosyasında consoldan gerekli değişkenler girilip üyelik fonksiyonları ve sistemin çıktısı grafik üzerinde gösteriliyor. 
+* Fuzzy sets, linguistic variables, membership functions and fuzzy rules are defined in FuzzyModel.fcl file based on the data in wine.txt.
+* Fuzzy logic is applied in the wine.java file using the data in wine.txt.
+* In the FuzzyExample.java file, the necessary variables are entered from the console and the membership functions and the output of the system are displayed on the graph. 
